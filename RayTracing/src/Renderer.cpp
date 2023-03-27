@@ -31,15 +31,16 @@ void Renderer::Render()
 			glm::vec2 coord = { (float)x / (float)m_FinalImage->GetWidth(), (float)y / (float)m_FinalImage->GetHeight() };
 			coord = coord * 2.0f - 1.0f;
 			coord.x *= aspectRatio;
-			m_ImageData[x + y * m_FinalImage->GetWidth()] = PerPixel(coord);
+			glm::vec4 color = PerPixel(coord);
+			m_ImageData[x + y * m_FinalImage->GetWidth()] = Utils::ConvertToRGBA(color);
 		}
 	}
 	m_FinalImage->SetData(m_ImageData);
 }
 
-uint32_t Renderer::PerPixel(glm::vec2 coord)
+glm::vec4 Renderer::PerPixel(glm::vec2 coord)
 {
-	glm::vec3 rayOrigin(0.0f, 0.0f, 2.0f);
+	glm::vec3 rayOrigin(0.0f, 0.0f, 1.0f);
 	glm::vec3 rayDirection(coord.x, coord.y, -1.0f);
 	float radius = 0.5f;
 	
@@ -54,24 +55,22 @@ uint32_t Renderer::PerPixel(glm::vec2 coord)
 	float c = glm::dot(rayOrigin, rayOrigin) - radius * radius;
 
 	// Quadratic Formula
-	//(-b +- sqrt(discriminant)) / 2 * a
 	float discriminant = b * b - 4.0f * a * c;
 
-	if (discriminant >= 0.0f)
-	{
-		float t1 = (-b - sqrt(discriminant)) / (2.0f * a);
-		float t2 = (-b + sqrt(discriminant)) / (2.0f * a);
+	if (discriminant < 0.0f)
+		return glm::vec4(0, 0, 0, 1);
 
-		{
-			glm::vec3 hitPoint1 = rayOrigin + rayDirection * t1;
-		}
-		{
-			glm::vec3 hitPoint2 = rayOrigin + rayDirection * t2;
-		}
+	float t1 = (-b + sqrt(discriminant)) / (2.0f * a);
+	float t2 = (-b - sqrt(discriminant)) / (2.0f * a);
 
-		return 0xFF0000FF;
-	}
+	glm::vec3 hitPoint = rayOrigin + rayDirection * t2;
+	glm::vec3 normal = glm::normalize(hitPoint);
 
-	return 0xFF000000;
+	glm::vec3 lightDir = glm::normalize(glm::vec3(-1, -1, -1));
+	float light = glm::max(glm::dot(normal, -lightDir), 0.0f);
+	
+	glm::vec3 sphereColor(0.50f, 0.0f, 1.0f);
+	sphereColor *= light;
 
+	return glm::vec4(sphereColor, 1.0f);
 }

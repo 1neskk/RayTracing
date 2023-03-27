@@ -17,6 +17,8 @@ public:
 		{
 			Render();
 		}
+		ImVec4 sphereColor = { 1.0f, 0.0f, 0.0f, 1.0f };
+		ImGui::ColorEdit3("Sphere Color", (float*)&sphereColor);
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
