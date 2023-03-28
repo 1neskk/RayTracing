@@ -5,10 +5,19 @@
 #include "Walnut/Timer.h"
 
 #include "Renderer.h"
+#include "Camera.h"
 
 class ExampleLayer : public Walnut::Layer
 {
 public:
+	ExampleLayer()
+		: m_Camera(45.0f, 0.1f, 100.0f){}
+
+	virtual void OnUpdate(float ts) override
+	{
+		m_Camera.OnUpdate(ts);
+	}
+
 	virtual void OnUIRender() override
 	{
 		ImGui::Begin("Settings");
@@ -17,7 +26,7 @@ public:
 		{
 			Render();
 		}
-		ImVec4 sphereColor = { 1.0f, 0.0f, 0.0f, 1.0f };
+		ImVec4 sphereColor = { 0.50f, 0.0f, 1.0f, 1.0f };
 		ImGui::ColorEdit3("Sphere Color", (float*)&sphereColor);
 		ImGui::End();
 
@@ -42,12 +51,14 @@ public:
 		Walnut::Timer timer;
 
 		m_Renderer.OnResize(m_ViewportWidth, m_ViewportHeight);
-		m_Renderer.Render();
+		m_Camera.OnResize(m_ViewportWidth, m_ViewportHeight);
+		m_Renderer.Render(m_Camera);
 
 		m_LastRenderTime = timer.ElapsedMillis();
 	}
 
 private:
+	Camera m_Camera;
 	Renderer m_Renderer;
 	uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
