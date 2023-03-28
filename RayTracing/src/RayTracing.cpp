@@ -11,7 +11,18 @@ class ExampleLayer : public Walnut::Layer
 {
 public:
 	ExampleLayer()
-		: m_Camera(45.0f, 0.1f, 100.0f){}
+		: m_Camera(45.0f, 0.1f, 100.0f)
+	{
+		{
+			// add a sphere to the scene (position, radius, color)
+			m_Scene.Spheres.push_back(Sphere{ {0.0f, 0.0f, 0.0f}, 0.5f, {0.50f, 0.0f, 1.0f} });
+		}
+
+		{
+			m_Scene.Spheres.push_back(Sphere{ {0.0f, 0.0f, -5.0f}, 1.5f, {0.2f, 0.3f, 1.0f} });
+		}
+
+	}
 
 	virtual void OnUpdate(float ts) override
 	{
@@ -26,8 +37,21 @@ public:
 		{
 			Render();
 		}
-		ImVec4 sphereColor = { 0.50f, 0.0f, 1.0f, 1.0f };
-		ImGui::ColorEdit3("Sphere Color", (float*)&sphereColor);
+		ImGui::End();
+
+		ImGui::Begin("Scene");
+		for (size_t i = 0; i < m_Scene.Spheres.size(); i++)
+		{
+			ImGui::PushID(i);
+			ImGui::Text("Sphere %d", i);
+
+			ImGui::DragFloat3("Sphere Position", (float*)&m_Scene.Spheres[i].Position, 0.1f);
+			ImGui::DragFloat("Sphere Radius", &m_Scene.Spheres[i].Radius, 0.1f);
+			ImGui::ColorEdit3("Sphere Color", (float*)&m_Scene.Spheres[i].Color);
+
+			ImGui::Separator();
+			ImGui::PopID();
+		}
 		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
@@ -52,13 +76,14 @@ public:
 
 		m_Renderer.OnResize(m_ViewportWidth, m_ViewportHeight);
 		m_Camera.OnResize(m_ViewportWidth, m_ViewportHeight);
-		m_Renderer.Render(m_Camera);
+		m_Renderer.Render(m_Scene, m_Camera);
 
 		m_LastRenderTime = timer.ElapsedMillis();
 	}
 
 private:
 	Camera m_Camera;
+	Scene m_Scene;
 	Renderer m_Renderer;
 	uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
