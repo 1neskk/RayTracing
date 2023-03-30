@@ -14,12 +14,12 @@ public:
 		: m_Camera(45.0f, 0.1f, 100.0f)
 	{
 		{
-			// add a sphere to the scene (position, radius, color)
-			m_Scene.Spheres.push_back(Sphere{ {0.0f, 0.0f, 0.0f}, 0.5f, {0.50f, 0.0f, 1.0f} });
+			// add a sphere to the scene ({position}, radius, {color})
+			m_Scene.Spheres.push_back(Sphere{ {0.0f, 0.0f, 0.0f}, 1.0f, {0.50f, 0.0f, 1.0f} });
 		}
 
 		{
-			m_Scene.Spheres.push_back(Sphere{ {0.0f, 0.0f, -5.0f}, 1.5f, {0.2f, 0.3f, 1.0f} });
+			m_Scene.Spheres.push_back(Sphere{ {0.0f, -101.0f, 0.0f}, 100.0f, {0.2f, 0.3f, 1.0f} });
 		}
 
 	}
