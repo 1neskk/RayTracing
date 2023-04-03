@@ -13,13 +13,29 @@ public:
 	ExampleLayer()
 		: m_Camera(45.0f, 0.1f, 100.0f)
 	{
+
+		Material& redSphere = m_Scene.Materials.emplace_back();
+		redSphere.Albedo = { 1.0f, 0.0f, 0.0f };
+		redSphere.Roughness = 0.0f;
+
+		Material& purpleSphere = m_Scene.Materials.emplace_back();
+		purpleSphere.Albedo = { 0.2f, 0.3f, 1.0f };
+		purpleSphere.Roughness = 0.1f;
+
 		{
-			// add a sphere to the scene ({position}, radius, {color})
-			m_Scene.Spheres.push_back(Sphere{ {0.0f, 0.0f, 0.0f}, 1.0f, {0.50f, 0.0f, 1.0f} });
+			Sphere sphere;
+			sphere.Position = { 0.0f, 0.0f, 0.0f };
+			sphere.Radius = 1.0f;
+			sphere.MaterialIndex = 0;
+			m_Scene.Spheres.push_back(sphere);
 		}
 
 		{
-			m_Scene.Spheres.push_back(Sphere{ {0.0f, -101.0f, 0.0f}, 100.0f, {0.2f, 0.3f, 1.0f} });
+			Sphere sphere;
+			sphere.Position = { 0.0f, -101.0f, 0.0f };
+			sphere.Radius = 100.0f;
+			sphere.MaterialIndex = 1;
+			m_Scene.Spheres.push_back(sphere);
 		}
 
 	}
@@ -47,12 +63,25 @@ public:
 
 			ImGui::DragFloat3("Sphere Position", (float*)&m_Scene.Spheres[i].Position, 0.1f);
 			ImGui::DragFloat("Sphere Radius", &m_Scene.Spheres[i].Radius, 0.1f);
-			ImGui::ColorEdit3("Sphere Color", (float*)&m_Scene.Spheres[i].Color);
+			ImGui::DragInt("Material", &m_Scene.Spheres[i].MaterialIndex, 1.0f, 0, (int)m_Scene.Materials.size() - 1);
 
 			ImGui::Separator();
 			ImGui::PopID();
 		}
 		ImGui::End();
+
+		for (size_t i = 0; i < m_Scene.Materials.size(); i++)
+		{
+			ImGui::PushID(i);
+
+			ImGui::ColorEdit3("Albedo", (float*)&m_Scene.Materials[i].Albedo);
+			ImGui::DragFloat("Roughness", &m_Scene.Materials[i].Roughness, 0.05f, 0.0f, 1.0f);
+			ImGui::DragFloat("Metallic", &m_Scene.Materials[i].Metallic, 0.05f, 0.0f, 1.0f);
+
+			ImGui::Separator();
+
+			ImGui::PopID();
+		}
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("Viewport");

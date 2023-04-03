@@ -25,11 +25,11 @@ private:
 		glm::vec3 WPosition;
 		glm::vec3 WNormal;
 		float HitDistance;
-		int MaterialIndex;
+		int ObjectIndex;
 	};
 
 	HitRecord TraceRay(const Ray& ray);
-	HitRecord RayClosestHit(const Ray& ray, float hitDistance, int materialIndex);
+	HitRecord RayClosestHit(const Ray& ray, float hitDistance, int objectIndex);
 	HitRecord RayMiss(const Ray& ray);
 	glm::vec4 RayGen(uint32_t x, uint32_t y);
 private:

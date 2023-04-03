@@ -47,14 +47,14 @@ glm::vec4 Renderer::RayGen(uint32_t x, uint32_t y)
 	
 	glm::vec3 color(0.0f);
 	float multiplier = 1.0f;
-	int bounces = 2;
+	int bounces = 5;
 
 	for (int i = 0; i < bounces; i++)
 	{
 		Renderer::HitRecord record = TraceRay(ray);
 		if (record.HitDistance < 0.0f)
 		{
-			glm::vec3 skyColor = glm::vec3(0.0f, 0.0f, 0.0f);
+			glm::vec3 skyColor = glm::vec3(0.6f, 0.7f, 0.9f);
 			color += skyColor * multiplier;
 			break;
 		}
@@ -62,16 +62,17 @@ glm::vec4 Renderer::RayGen(uint32_t x, uint32_t y)
 		glm::vec3 lightDirection = glm::normalize(glm::vec3(-1, -1, -1));
 		float light = glm::max(glm::dot(record.WNormal, -lightDirection), 0.0f);
 
-		const Sphere& sphere = m_ActiveScene->Spheres[record.MaterialIndex];
+		const Sphere& sphere = m_ActiveScene->Spheres[record.ObjectIndex];
+		const Material& material = m_ActiveScene->Materials[sphere.MaterialIndex];
 
-		glm::vec3 sphereColor = sphere.Color;
+		glm::vec3 sphereColor = material.Albedo;
 		sphereColor *= light;
 		color += sphereColor * multiplier;
 
-		multiplier *= 0.7f;
+		multiplier *= 0.5f;
 
 		ray.Origin = record.WPosition + record.WNormal * 0.0001f;
-		ray.Direction = glm::reflect(ray.Direction, record.WNormal);
+		ray.Direction = glm::reflect(ray.Direction, record.WNormal + material.Roughness * Walnut::Random::Vec3(-0.5f, 0.5f));
 	}
 
 	return glm::vec4(color, 1.0f);
@@ -111,13 +112,13 @@ Renderer::HitRecord Renderer::TraceRay(const Ray& ray)
 	return RayClosestHit(ray, hitDistance, closestSphere);
 }
 
-Renderer::HitRecord Renderer::RayClosestHit(const Ray& ray, float hitDistance, int materialIndex)
+Renderer::HitRecord Renderer::RayClosestHit(const Ray& ray, float hitDistance, int objectIndex)
 {
 	Renderer::HitRecord record;
 	record.HitDistance = hitDistance;
-	record.MaterialIndex = materialIndex;
+	record.ObjectIndex = objectIndex;
 	
-	const Sphere& closestSphere = m_ActiveScene->Spheres[materialIndex];
+	const Sphere& closestSphere = m_ActiveScene->Spheres[objectIndex];
 
 	glm::vec3 origin = ray.Origin - closestSphere.Position;
 	record.WPosition = origin + ray.Direction * hitDistance;
