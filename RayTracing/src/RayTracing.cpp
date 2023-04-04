@@ -19,7 +19,7 @@ public:
 		redSphere.Roughness = 0.0f;
 
 		Material& purpleSphere = m_Scene.Materials.emplace_back();
-		purpleSphere.Albedo = { 0.2f, 0.3f, 1.0f };
+		purpleSphere.Albedo = { 0.0f, 0.2f, 1.0f };
 		purpleSphere.Roughness = 0.1f;
 
 		{
@@ -48,7 +48,6 @@ public:
 
 	virtual void OnUIRender() override
 	{
-		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 		ImGuiIO& io = ImGui::GetIO(); (void)io;
 
