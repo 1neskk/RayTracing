@@ -42,16 +42,24 @@ public:
 
 	virtual void OnUpdate(float ts) override
 	{
-		m_Camera.OnUpdate(ts);
+		if (m_Camera.OnUpdate(ts))
+			m_Renderer.ResetFrameIndex();
 	}
 
 	virtual void OnUIRender() override
 	{
 		ImGui::Begin("Settings");
-		ImGui::Text("Last render: %.3fms", m_LastRenderTime);
+		ImGui::Text("Last render: %.2fms", m_LastRenderTime);
 		if (ImGui::Button("Render"))
 		{
 			Render();
+		}
+
+		ImGui::Checkbox("Accumulate", &m_Renderer.GetSettings().Accumulate);
+
+		if (ImGui::Button("Reset"))
+		{
+			m_Renderer.ResetFrameIndex();
 		}
 		ImGui::End();
 
@@ -67,8 +75,7 @@ public:
 
 			ImGui::Separator();
 			ImGui::PopID();
-		}
-		ImGui::End();
+		};
 
 		for (size_t i = 0; i < m_Scene.Materials.size(); i++)
 		{
@@ -82,6 +89,8 @@ public:
 
 			ImGui::PopID();
 		}
+
+		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("Viewport");
