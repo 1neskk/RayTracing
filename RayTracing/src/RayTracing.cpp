@@ -48,8 +48,12 @@ public:
 
 	virtual void OnUIRender() override
 	{
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+
 		ImGui::Begin("Settings");
-		ImGui::Text("Last render: %.2fms", m_LastRenderTime);
+		ImGui::Text("Last render: %.2fms | (%.1f FPS)", m_LastRenderTime, io.Framerate);
 		if (ImGui::Button("Render"))
 		{
 			Render();
@@ -69,8 +73,12 @@ public:
 			ImGui::PushID(i);
 			ImGui::Text("Sphere %d", i);
 
-			ImGui::DragFloat3("Sphere Position", (float*)&m_Scene.Spheres[i].Position, 0.1f);
-			ImGui::DragFloat("Sphere Radius", &m_Scene.Spheres[i].Radius, 0.1f);
+			if (ImGui::DragFloat3("Sphere Position", (float*)&m_Scene.Spheres[i].Position, 0.1f))
+				m_Renderer.ResetFrameIndex();
+
+			if (ImGui::DragFloat("Sphere Radius", &m_Scene.Spheres[i].Radius, 0.1f))
+				m_Renderer.ResetFrameIndex();
+
 			ImGui::DragInt("Material", &m_Scene.Spheres[i].MaterialIndex, 1.0f, 0, (int)m_Scene.Materials.size() - 1);
 
 			ImGui::Separator();
