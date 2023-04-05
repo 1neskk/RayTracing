@@ -82,6 +82,7 @@ void Renderer::Render(const Scene& scene, const Camera& camera)
 	}
 }
 
+//Per pixel function
 glm::vec4 Renderer::RayGen(uint32_t x, uint32_t y)
 {
 	Ray ray;
