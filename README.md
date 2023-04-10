@@ -1,5 +1,5 @@
 # Ray Tracing
-I'm building this Ray Tracing using [Dear ImGui](https://github.com/ocornut/imgui), [Vulkan](https://vulkan.lunarg.com/), [OpenGL](https://www.opengl.org/) to better understand and learn Computer Graphics!
+I'm building this Ray Tracing using [Dear ImGui](https://github.com/ocornut/imgui), [Vulkan](https://vulkan.lunarg.com/), [GLFW](https://github.com/glfw/glfw) to better understand and learn Computer Graphics!
 
 ## Resources being used
 - [Ray Tracing in One Weekend Book](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
