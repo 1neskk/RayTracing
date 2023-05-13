@@ -130,21 +130,21 @@ Renderer::HitRecord Renderer::TraceRay(const Ray& ray)
 		glm::vec3 origin = ray.Origin - sphere.Position;
 
 
-		float a = glm::dot(ray.Direction, ray.Direction);
-		float b = 2.0f * glm::dot(origin, ray.Direction);
-		float c = glm::dot(origin, origin) - sphere.Radius * sphere.Radius;
+		const float a = glm::dot(ray.Direction, ray.Direction);
+		const float b = 2.0f * glm::dot(origin, ray.Direction);
+		const float c = glm::dot(origin, origin) - sphere.Radius * sphere.Radius;
 
-		float discriminant = b * b - 4.0f * a * c;
+		const float discriminant = b * b - 4.0f * a * c;
 
 		if (discriminant < 0.0f)
 			continue;
 
-		float t1 = (-b + sqrt(discriminant)) / (2.0f * a);
-		float t2 = (-b - sqrt(discriminant)) / (2.0f * a);
+		//float t1 = (-b + sqrt(discriminant)) / (2.0f * a);
+		const float t2 = (-b - sqrt(discriminant)) / (2.0f * a);
 		if (t2 > 0.0f && t2 < hitDistance)
 		{
 			hitDistance = t2;
-			closestSphere = (int)i;
+			closestSphere = static_cast<int>(i);
 		}
 
 	}
