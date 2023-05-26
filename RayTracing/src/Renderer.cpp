@@ -48,7 +48,7 @@ void Renderer::Render(const Scene& scene, const Camera& camera)
 			std::for_each(std::execution::par, m_ImageX.begin(), m_ImageX.end(),
 			[this, y](uint32_t x)
 			{
-				glm::vec4 color = RayGen(x, y);
+				const glm::vec4 color = RayGen(x, y);
 				m_AccumulationData[x + y * m_FinalImage->GetWidth()] += color;
 
 				glm::vec4 AccumulatedColor = m_AccumulationData[x + y * m_FinalImage->GetWidth()] / (float)m_FrameIndex;
