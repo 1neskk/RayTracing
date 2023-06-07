@@ -1,5 +1,4 @@
 # Ray Tracer
-**Development paused because I'm taking a time to learn more about Linear Algebra and Computer Graphics.**
 
 I'm building this Ray Tracer using [Dear ImGui](https://github.com/ocornut/imgui), [Vulkan](https://vulkan.lunarg.com/), [GLM](https://github.com/g-truc/glm) to better understand and learn Computer Graphics!
 
